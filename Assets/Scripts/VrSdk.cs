@@ -178,7 +178,7 @@ namespace TiltBrush
             //     m_OverlayMode = OverlayMode.Steam;
             // }
 #if OCULUS_SUPPORTED
-            else if (App.Config.m_SdkMode == SdkMode.Oculus)
+            else if (App.Config.m_SdkMode == SdkMode.UnityXR)
             {
                 m_OverlayMode = OverlayMode.OVR;
                 var gobj = new GameObject("Oculus Overlay");
@@ -190,10 +190,13 @@ namespace TiltBrush
                 m_OVROverlay.currentOverlayShape = OVROverlay.OverlayShape.Quad;
                 m_OVROverlay.noDepthBufferTesting = true;
                 m_OVROverlay.enabled = false;
+
+                //Passthrough
+                gobj.AddComponent<OVRPassthroughLayer>();
             }
 #endif // OCULUS_SUPPORTED
 
-            if (App.Config.m_SdkMode == SdkMode.Oculus)
+            if (App.Config.m_SdkMode == SdkMode.UnityXR)
             {
 #if OCULUS_SUPPORTED
                 // ---------------------------------------------------------------------------------------- //
@@ -202,6 +205,7 @@ namespace TiltBrush
                 OVRManager manager = gameObject.AddComponent<OVRManager>();
                 manager.trackingOriginType = OVRManager.TrackingOrigin.FloorLevel;
                 manager.useRecommendedMSAALevel = false;
+                manager.isInsightPassthroughEnabled = true;
 
                 SetControllerStyle(TiltBrush.ControllerStyle.OculusTouch);
                 // adding components to the VR Camera needed for fading view and getting controller poses.
