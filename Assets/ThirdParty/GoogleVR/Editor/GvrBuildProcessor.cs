@@ -16,7 +16,6 @@
 // don't have IPreprocessBuild and IPostprocessBuild.
 #if UNITY_5_6_OR_NEWER && (UNITY_ANDROID || UNITY_IOS)
 using UnityEngine;
-using UnityEngine.VR;
 using UnityEditor;
 using UnityEditor.Build;
 using System.Linq;

@@ -21,7 +21,8 @@ using UnityEditor.Build;
 using UnityEngine;
 using UnityEditorInternal.VR;
 
-class MyCustomBuildProcessor : IPreprocessBuild, IPostprocessBuild
+// TODO:Mike - commented out functions, are they really needed?
+class MyCustomBuildProcessor //: IPreprocessBuild, IPostprocessBuild
 {
     private const string SCENE_NAME_PERMISSIONS_DEMO = "PermissionsDemo";
     private const string VR_DEVICE_CARDBOARD = "cardboard";
@@ -40,100 +41,104 @@ class MyCustomBuildProcessor : IPreprocessBuild, IPostprocessBuild
     // the PermissionsDemo needs a perm statement in the Manifest while other demos don't.
     // Adding Cardboard to VR SDKs will merge in the Manifest-Cardboard which has perm
     // statemetn in it.
-    public void OnPreprocessBuild(BuildTarget target, string path)
-    {
-        m_cardboardAddedFromCode = false;
 
-        string[] androidVrSDKs = VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Android);
+    // TODO:Mike - Is this needed?
+    // public void OnPreprocessBuild(BuildTarget target, string path)
+    // {
+    //     m_cardboardAddedFromCode = false;
 
-        EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
+    //     string[] androidVrSDKs = VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Android);
 
-        // See if PermissionsDemo is the first enabled scene in the array of scenes to build.
-        for (int i = 0; i < scenes.Length; i++)
-        {
-            if (scenes[i].path.Contains(SCENE_NAME_PERMISSIONS_DEMO))
-            {
-                if (!scenes[i].enabled)
-                {
-                    return;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            else
-            {
-                if (scenes[i].enabled)
-                {
-                    return;
-                }
-            }
-        }
+    //     EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
 
-        bool hasCardboard = Array.Exists<string>(androidVrSDKs,
-            element => element.Equals(VR_DEVICE_CARDBOARD));
+    //     // See if PermissionsDemo is the first enabled scene in the array of scenes to build.
+    //     for (int i = 0; i < scenes.Length; i++)
+    //     {
+    //         if (scenes[i].path.Contains(SCENE_NAME_PERMISSIONS_DEMO))
+    //         {
+    //             if (!scenes[i].enabled)
+    //             {
+    //                 return;
+    //             }
+    //             else
+    //             {
+    //                 break;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             if (scenes[i].enabled)
+    //             {
+    //                 return;
+    //             }
+    //         }
+    //     }
 
-        if (hasCardboard)
-        {
-            return;
-        }
+    //     bool hasCardboard = Array.Exists<string>(androidVrSDKs,
+    //         element => element.Equals(VR_DEVICE_CARDBOARD));
 
-        bool hasDaydream = Array.Exists<string>(androidVrSDKs,
-            element => element.Equals(VR_DEVICE_DAYDREAM));
+    //     if (hasCardboard)
+    //     {
+    //         return;
+    //     }
 
-        if (!hasDaydream)
-        {
-            return;
-        }
+    //     bool hasDaydream = Array.Exists<string>(androidVrSDKs,
+    //         element => element.Equals(VR_DEVICE_DAYDREAM));
 
-        string[] androidVrSDKsAppended = new string[androidVrSDKs.Length+1];
+    //     if (!hasDaydream)
+    //     {
+    //         return;
+    //     }
 
-        for (int i = 0; i < androidVrSDKs.Length; i++)
-        {
-            androidVrSDKsAppended[i] = androidVrSDKs[i];
-        }
+    //     string[] androidVrSDKsAppended = new string[androidVrSDKs.Length+1];
 
-        androidVrSDKsAppended[androidVrSDKsAppended.Length - 1] = VR_DEVICE_CARDBOARD;
+    //     for (int i = 0; i < androidVrSDKs.Length; i++)
+    //     {
+    //         androidVrSDKsAppended[i] = androidVrSDKs[i];
+    //     }
 
-        VREditor.SetVREnabledOnTargetGroup(
-            BuildTargetGroup.Android, true);
-        VREditor.SetVREnabledDevicesOnTargetGroup(
-            BuildTargetGroup.Android,
-            androidVrSDKsAppended);
+    //     androidVrSDKsAppended[androidVrSDKsAppended.Length - 1] = VR_DEVICE_CARDBOARD;
 
-        m_cardboardAddedFromCode = true;
-    }
+    //     VREditor.SetVREnabledOnTargetGroup(
+    //         BuildTargetGroup.Android, true);
+    //     VREditor.SetVREnabledDevicesOnTargetGroup(
+    //         BuildTargetGroup.Android,
+    //         androidVrSDKsAppended);
+
+    //     m_cardboardAddedFromCode = true;
+    // }
 
     // OnPostprocessBuild() is called after the build process. It does appropriate cleanup
     // so that this script only affects build process for PermissionsDemo, not others.
-    public void OnPostprocessBuild(BuildTarget target, string path)
-    {
-        if (!m_cardboardAddedFromCode)
-            return;
 
-        string[] androidVrSDKs = VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Android);
+    // TODO:Mike - Is this needed?
+    // public void OnPostprocessBuild(BuildTarget target, string path)
+    // {
+    //     if (!m_cardboardAddedFromCode)
+    //         return;
 
-        // The enabled devices are modified somehow, which shoudln't happen. Abort the post build process.
-        if (androidVrSDKs.Length == 0 || androidVrSDKs[androidVrSDKs.Length - 1] != VR_DEVICE_CARDBOARD)
-        {
-            return;
-        }
+    //     string[] androidVrSDKs = VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Android);
 
-        string[] androidVrSDKsShortened = new string[androidVrSDKs.Length - 1];
+    //     // The enabled devices are modified somehow, which shoudln't happen. Abort the post build process.
+    //     if (androidVrSDKs.Length == 0 || androidVrSDKs[androidVrSDKs.Length - 1] != VR_DEVICE_CARDBOARD)
+    //     {
+    //         return;
+    //     }
 
-        for (int i = 0; i < androidVrSDKsShortened.Length; i++)
-        {
-            androidVrSDKsShortened[i] = androidVrSDKs[i];
-        }
+    //     string[] androidVrSDKsShortened = new string[androidVrSDKs.Length - 1];
 
-        VREditor.SetVREnabledOnTargetGroup(
-            BuildTargetGroup.Android, true);
-        VREditor.SetVREnabledDevicesOnTargetGroup(
-            BuildTargetGroup.Android,
-            androidVrSDKsShortened);
+    //     for (int i = 0; i < androidVrSDKsShortened.Length; i++)
+    //     {
+    //         androidVrSDKsShortened[i] = androidVrSDKs[i];
+    //     }
 
-        m_cardboardAddedFromCode = false;
-    }
+    //     VREditor.SetVREnabledOnTargetGroup(
+    //         BuildTargetGroup.Android, true);
+    //     VREditor.SetVREnabledDevicesOnTargetGroup(
+    //         BuildTargetGroup.Android,
+    //         androidVrSDKsShortened);
+
+    //     m_cardboardAddedFromCode = false;
+    // }
 }
 #endif  // UNITY_5_6_OR_NEWER && UNITY_ANDROID
