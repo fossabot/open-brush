@@ -30,4 +30,6 @@
         android:version="1"
         android:required="true" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
+    <uses-feature android:name="com.oculus.experimental.enabled" android:required="true" />
+    <uses-feature android:name="com.oculus.feature.PASSTHROUGH" android:required="true" />
 </manifest>
