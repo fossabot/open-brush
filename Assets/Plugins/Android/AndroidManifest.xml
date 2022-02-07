@@ -6,7 +6,7 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto" package="com.google.tiltbrush"
+    android:installLocation="auto" package="com.icosa.openbrush"
     xmlns:tools="http://schemas.android.com/tools">
     <application
         android:allowBackup="false"
@@ -30,6 +30,5 @@
         android:version="1"
         android:required="true" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
-    <uses-feature android:name="com.oculus.experimental.enabled" android:required="true" />
     <uses-feature android:name="com.oculus.feature.PASSTHROUGH" android:required="true" />
 </manifest>
