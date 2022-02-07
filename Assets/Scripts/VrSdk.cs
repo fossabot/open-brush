@@ -164,6 +164,21 @@ namespace TiltBrush
             {
                 InputDevices.deviceConnected += OnUnityXRDeviceConnected;
                 InputDevices.deviceDisconnected += OnUnityXRDeviceDisconnected;
+
+#if OCULUS_SUPPORTED
+                m_OverlayMode = OverlayMode.OVR;
+                var gobj = new GameObject("Oculus Overlay");
+                gobj.transform.SetParent(m_VrSystem.transform, worldPositionStays: false);
+                m_OVROverlay = gobj.AddComponent<OVROverlay>();
+                m_OVROverlay.isDynamic = true;
+                m_OVROverlay.compositionDepth = 0;
+                m_OVROverlay.currentOverlayType = OVROverlay.OverlayType.Overlay;
+                m_OVROverlay.currentOverlayShape = OVROverlay.OverlayShape.Quad;
+                m_OVROverlay.noDepthBufferTesting = true;
+                m_OVROverlay.enabled = false;
+
+#endif // OCULUS_SUPPORTED
+
             }
 
             if (App.Config.IsMobileHardware && m_GvrOverlayPrefab != null)
@@ -177,48 +192,8 @@ namespace TiltBrush
             // {
             //     m_OverlayMode = OverlayMode.Steam;
             // }
-#if OCULUS_SUPPORTED
-            else if (App.Config.m_SdkMode == SdkMode.UnityXR)
-            {
-                m_OverlayMode = OverlayMode.OVR;
-                var gobj = new GameObject("Oculus Overlay");
-                gobj.transform.SetParent(m_VrSystem.transform, worldPositionStays: false);
-                m_OVROverlay = gobj.AddComponent<OVROverlay>();
-                m_OVROverlay.isDynamic = true;
-                m_OVROverlay.compositionDepth = 0;
-                m_OVROverlay.currentOverlayType = OVROverlay.OverlayType.Overlay;
-                m_OVROverlay.currentOverlayShape = OVROverlay.OverlayShape.Quad;
-                m_OVROverlay.noDepthBufferTesting = true;
-                m_OVROverlay.enabled = false;
 
-                //Passthrough
-                gobj.AddComponent<OVRPassthroughLayer>();
-            }
-#endif // OCULUS_SUPPORTED
-
-            if (App.Config.m_SdkMode == SdkMode.UnityXR)
-            {
-#if OCULUS_SUPPORTED
-                // ---------------------------------------------------------------------------------------- //
-                // OculusVR
-                // ---------------------------------------------------------------------------------------- //
-                OVRManager manager = gameObject.AddComponent<OVRManager>();
-                manager.trackingOriginType = OVRManager.TrackingOrigin.FloorLevel;
-                manager.useRecommendedMSAALevel = false;
-                manager.isInsightPassthroughEnabled = true;
-
-                SetControllerStyle(TiltBrush.ControllerStyle.OculusTouch);
-                // adding components to the VR Camera needed for fading view and getting controller poses.
-                m_VrCamera.gameObject.AddComponent<OculusCameraFade>();
-                m_VrCamera.gameObject.AddComponent<OculusPreCullHook>();
-
-                //Add an OVRCameraRig to the VrSystem for Mixed Reality Capture.
-                var cameraRig = m_VrSystem.AddComponent<OVRCameraRig>();
-                //Disable the OVRCameraRig's eye cameras, since Open Brush already has its own.
-                cameraRig.disableEyeAnchorCameras = true;
-#endif // OCULUS_SUPPORTED
-            }
-            else if (App.Config.m_SdkMode == SdkMode.SteamVR)
+            if (App.Config.m_SdkMode == SdkMode.SteamVR)
             {
                 // ---------------------------------------------------------------------------------------- //
                 // SteamVR
@@ -277,6 +252,25 @@ namespace TiltBrush
             }
             else if (App.Config.m_SdkMode == SdkMode.UnityXR)
             {
+#if OCULUS_SUPPORTED
+                // ---------------------------------------------------------------------------------------- //
+                // OculusVR
+                // ---------------------------------------------------------------------------------------- //
+                OVRManager manager = gameObject.AddComponent<OVRManager>();
+                manager.trackingOriginType = OVRManager.TrackingOrigin.FloorLevel;
+                manager.useRecommendedMSAALevel = false;
+                manager.isInsightPassthroughEnabled = true;
+
+                // adding components to the VR Camera needed for fading view and getting controller poses.
+                m_VrCamera.gameObject.AddComponent<OculusCameraFade>();
+                m_VrCamera.gameObject.AddComponent<OculusPreCullHook>();
+
+                //Add an OVRCameraRig to the VrSystem for Mixed Reality Capture.
+                var cameraRig = m_VrSystem.AddComponent<OVRCameraRig>();
+                //Disable the OVRCameraRig's eye cameras, since Open Brush already has its own.
+                cameraRig.disableEyeAnchorCameras = true;
+#endif // OCULUS_SUPPORTED
+
                 // TODO:Mike - We need to set a controller style, is it best here or is it best later when controllers register themselves?
                 // Does this entire system need a rethink for the 'modularity' of the XR subsystem?
                 InputDevice tryGetUnityXRController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
