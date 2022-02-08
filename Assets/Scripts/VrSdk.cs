@@ -259,6 +259,8 @@ namespace TiltBrush
                 OVRManager manager = gameObject.AddComponent<OVRManager>();
                 manager.trackingOriginType = OVRManager.TrackingOrigin.FloorLevel;
                 manager.useRecommendedMSAALevel = false;
+
+                Debug.Log("About to enable passthrough on manager");
                 manager.isInsightPassthroughEnabled = true;
 
                 // adding components to the VR Camera needed for fading view and getting controller poses.
