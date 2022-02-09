@@ -17,12 +17,12 @@ MonoBehaviour:
   m_Description: Standard
   m_IconTexture: {fileID: 2800000, guid: 9f1a595e5ff03a744b1a3c6c4390546d, type: 3}
   m_RenderSettings:
-    m_FogEnabled: 1
+    m_FogEnabled: 0
     m_FogColor: {r: 0.16470589, g: 0.16470589, b: 0.20784314, a: 1}
     m_FogDensity: 0.0025
     m_FogStartDistance: 0
     m_FogEndDistance: 0
-    m_ClearColor: {r: 0.15686275, g: 0.15686275, b: 0.20392157, a: 1}
+    m_ClearColor: {r: 0.14150941, g: 0.13016196, b: 0.13016196, a: 0.23921569}
     m_AmbientColor: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
     m_SkyboxExposure: 0.9
     m_SkyboxTint: {r: 0.23529412, g: 0.2509804, b: 0.3529412, a: 1}
